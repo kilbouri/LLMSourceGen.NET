@@ -16,10 +16,10 @@ public class ChatGPTSourceGenerator : LLMSourceGenerator<ChatGPTAttribute>
                 "using System.Text.Json;"
             ],
             [
-                "/// <remarks>This was generated!</remarks>"
+                $"/// <remarks>Input prompt: {prompt}</remarks>"
             ],
             [
-                "Console.WriteLine(\"Hello!\");"
+                $"Console.WriteLine(\"You called {methodSignature}, which was source-generated using ChatGPT with the prompt '{prompt}'.\");"
             ]);
     }
 }

@@ -1,9 +1,24 @@
 ﻿using LLMSourceGen.Common;
 
-new Test1().SayHello();
+namespace Demo;
 
-partial class Test1
+partial class Program
 {
-    [ChatGPT(Prompt = "Say 'Hello'")]
-    public partial void SayHello();
+    static void Main()
+    {
+        Program p = new();
+
+        p.SayHello();
+        p.FizzBuzz();
+        p.SayGoodbye();
+    }
+
+    [ChatGPT(Prompt = "Say 'Hello!'")]
+    private partial void SayHello();
+
+    [ChatGPT(Prompt = "Print FizzBuzz from 1 to 15")]
+    private partial void FizzBuzz();
+
+    [ChatGPT(Prompt = "Say 'Goodbye!'")]
+    private partial void SayGoodbye();
 }
