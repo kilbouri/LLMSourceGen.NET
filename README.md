@@ -13,6 +13,6 @@ get an LLM to generate the answer for you without having to ever open a browser?
 
 This is an early prototype/proof-of-sarcastic-concept. As such, it has many limitations:
 
-- can only generate methods
+- can only generate non-generic methods
 - does not provide much context to the underlying LLM
 - does not ensure safe type name resolution
