@@ -7,8 +7,11 @@ using LLMSourceGen.Analyzer.Exceptions;
 
 namespace LLMSourceGen.Analyzer.Generators.Groq;
 
+/// <summary>
+/// A method source generator based on the Groq API.
+/// </summary>
 [Generator]
-public sealed class ChatGPTSourceGenerator : LLMSourceGenerator<GroqLLMGeneratedAttribute>
+public sealed class GroqSourceGenerator : LLMSourceGenerator<GroqLLMGeneratedAttribute>
 {
     private static readonly string? ApiKey = ConfigurationHelper.GetVariable("GroqApiKey");
     private static readonly string GroqModel = ConfigurationHelper.GetVariable("GroqModel") ?? "llama3-8b-8192";
@@ -41,7 +44,7 @@ public sealed class ChatGPTSourceGenerator : LLMSourceGenerator<GroqLLMGenerated
         Prompt: {userPrompt}
         """;
 
-    protected override async Task<LLMGeneratedData?> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken)
+    protected override async Task<LLMGeneratedData> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken)
     {
         if (ApiKey is null) throw new MethodGenerationException(methodSignature, "Groq API key not set");
         using GroqHttpClient groqClient = new(ApiKey);

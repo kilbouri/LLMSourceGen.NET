@@ -2,6 +2,8 @@ using System.CodeDom.Compiler;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using LLMSourceGen.Common.Attributes;
+using LLMSourceGen.Analyzer.Exceptions;
+using Newtonsoft.Json;
 
 namespace LLMSourceGen.Analyzer.Generators.Base;
 
@@ -19,7 +21,7 @@ public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGener
     /// <param name="methodSignature">The signature of the method being LLM-generated</param>
     /// <param name="prompt">The user-supplied prompt</param>
     /// <returns>The parsed LLM response</returns>
-    protected abstract Task<LLMGeneratedData?> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken);
+    protected abstract Task<LLMGeneratedData> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken);
 
     private async Task EmitGeneratedCodeAsync(IndentedTextWriter writer, ImmutableArray<LLMMethod?> methods, CancellationToken cancellationToken = default)
     {
@@ -34,9 +36,7 @@ public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGener
         {
             if (method is null) continue;
 
-            LLMGeneratedData? llmResponse = await PromptLLMAsync(method.ToDisplayString() + ";", method.UserPrompt, cancellationToken);
-            if (llmResponse is null) continue;
-
+            LLMGeneratedData llmResponse = await PromptLLMAsync(method.ToDisplayString() + ";", method.UserPrompt, cancellationToken);
             LLMDeclaringType? parent = method.DeclaringType;
 
             // output the namespace if there is one

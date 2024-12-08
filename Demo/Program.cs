@@ -1,4 +1,4 @@
-﻿using LLMSourceGen.Common;
+﻿using LLMSourceGen.Common.Attributes;
 
 namespace Demo;
 
