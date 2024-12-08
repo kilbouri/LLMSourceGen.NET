@@ -18,9 +18,14 @@ internal sealed class GroqHttpClient : IDisposable
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
     }
 
-    public async Task<GroqChatResponse?> SendChatRequestAsync(string model, GroqMessage[] messages, CancellationToken cancellationToken)
+    public async Task<GroqChatResponse?> SendChatRequestAsync(GroqMessage[] messages, CancellationToken cancellationToken)
     {
-        var content = new StringContent(JsonConvert.SerializeObject(new GroqChatRequest(model, messages)));
+        var content = new StringContent(JsonConvert.SerializeObject(new GroqChatRequest()
+        {
+            Model = ModelId,
+            Messages = messages
+        }));
+
         var response = await httpClient.PostAsync(API_ENDPOINT, content, cancellationToken);
 
         if (!response.IsSuccessStatusCode) return null;

@@ -1,7 +1,8 @@
 namespace LLMSourceGen.Analyzer.Generators.Groq;
 
-internal sealed record GroqJsonResponse(
-    string[] Usings,
-    string[] Documentation,
-    string[] Body
-);
+internal sealed class GroqJsonResponse
+{
+    public string[] Usings { get; init; } = [];
+    public string[] Documentation { get; init; } = [];
+    public string[] Body { get; init; } = [];
+}

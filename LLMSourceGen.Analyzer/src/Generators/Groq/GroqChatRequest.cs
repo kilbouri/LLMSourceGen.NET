@@ -1,6 +1,7 @@
 namespace LLMSourceGen.Analyzer.Generators.Groq;
 
-internal sealed record GroqChatRequest(
-    string Model,
-    GroqMessage[] Messages
-);
+internal class GroqChatRequest
+{
+    public string Model { get; init; } = string.Empty;
+    public GroqMessage[] Messages { get; init; } = [];
+}

@@ -3,6 +3,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using LLMSourceGen.Common.Attributes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LLMSourceGen.Analyzer.Generators.Base;
 
@@ -27,8 +29,19 @@ public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGener
         public string ToDisplayString() => $"{Modifiers} {ReturnType} {MethodName}({string.Join(", ", Arguments.Select(x => $"{x.Type} {x.Name}"))})";
     }
 
+    private JsonSerializerSettings JsonConvertSettings => new()
+    {
+        ContractResolver = new DefaultContractResolver()
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        }
+    };
+
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        JsonConvert.DefaultSettings = () => JsonConvertSettings;
+
         var methodsToGenerate = context
                                     .SyntaxProvider
                                     .ForAttributeWithMetadataName(
