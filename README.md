@@ -1,6 +1,6 @@
 # .NET LLM Source Generation
 
-LLMs are the new 🔥 hotness 🔥 for code generation. Why use StackOverflow when you can
+Large Language Models (LLMs) are the new 🔥 hotness 🔥 for code generation. Why use StackOverflow when you can
 get an LLM to generate the answer for you without having to ever open a browser?
 
 > [!WARNING]  
