@@ -1,4 +1,4 @@
-namespace LLMSourceGen.Common;
+namespace LLMSourceGen.Common.Attributes;
 
 /// <summary>
 /// Base class for all LLM-based source generation attributes.

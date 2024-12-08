@@ -1,9 +1,9 @@
 using System.CodeDom.Compiler;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using LLMSourceGen.Common;
+using LLMSourceGen.Common.Attributes;
 
-namespace LLMSourceGen.Generators.Base;
+namespace LLMSourceGen.Analyzer.Generators.Base;
 
 public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGenerator where TAttribute : LLMGeneratedAttribute
 {

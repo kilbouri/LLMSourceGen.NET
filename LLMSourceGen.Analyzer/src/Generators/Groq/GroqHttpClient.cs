@@ -1,23 +1,28 @@
 using Newtonsoft.Json;
 
-namespace LLMSourceGen.Generators.Groq;
+namespace LLMSourceGen.Analyzer.Generators.Groq;
 
-internal sealed class GroqHttpClient(string ApiKey) : IDisposable
+internal sealed class GroqHttpClient : IDisposable
 {
     private const string API_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
     public string ModelId { get; set; } = "llama3-8b-8192";
     public string? SystemPrompt { get; set; }
 
-    private readonly HttpClient httpClient = new();
+    private readonly HttpClient httpClient;
     private bool _disposed = false;
 
-    public async Task<GroqChatResponse?> SendChatRequestAsync(GroqChatRequest request, CancellationToken cancellationToken)
+    public GroqHttpClient(string apiKey)
     {
-        StringContent requestContent = new(":");
-        requestContent.Headers.Add("Authorization", $"Bearer {ApiKey}");
+        httpClient = new();
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+    }
 
-        var response = await httpClient.PostAsync(API_ENDPOINT, new StringContent(JsonConvert.SerializeObject(request)), cancellationToken);
+    public async Task<GroqChatResponse?> SendChatRequestAsync(string model, GroqMessage[] messages, CancellationToken cancellationToken)
+    {
+        var content = new StringContent(JsonConvert.SerializeObject(new GroqChatRequest(model, messages)));
+        var response = await httpClient.PostAsync(API_ENDPOINT, content, cancellationToken);
+
         if (!response.IsSuccessStatusCode) return null;
 
         string responseBody = await response.Content.ReadAsStringAsync();

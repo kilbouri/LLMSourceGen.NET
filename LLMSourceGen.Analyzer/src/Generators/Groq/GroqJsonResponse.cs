@@ -1,4 +1,4 @@
-namespace LLMSourceGen.Generators.Groq;
+namespace LLMSourceGen.Analyzer.Generators.Groq;
 
 internal sealed record GroqJsonResponse(
     string[] Usings,

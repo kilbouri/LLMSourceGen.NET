@@ -1,10 +1,11 @@
 using Microsoft.CodeAnalysis;
-using LLMSourceGen.Common;
-using LLMSourceGen.Generators.Base;
-using LLMSourceGen.Configuration;
+using LLMSourceGen.Common.Attributes;
+using LLMSourceGen.Analyzer.Generators.Base;
+using LLMSourceGen.Analyzer.Configuration;
 using Newtonsoft.Json;
+using LLMSourceGen.Analyzer.Exceptions;
 
-namespace LLMSourceGen.Generators.Groq;
+namespace LLMSourceGen.Analyzer.Generators.Groq;
 
 [Generator]
 public sealed class ChatGPTSourceGenerator : LLMSourceGenerator<GroqLLMGeneratedAttribute>
@@ -42,23 +43,23 @@ public sealed class ChatGPTSourceGenerator : LLMSourceGenerator<GroqLLMGenerated
 
     protected override async Task<LLMGeneratedData?> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken)
     {
-        if (ApiKey is null) return null;
+        if (ApiKey is null) throw new MethodGenerationException(methodSignature, "Groq API key not set");
         using GroqHttpClient groqClient = new(ApiKey);
 
-        var chatResponse = await groqClient.SendChatRequestAsync(new(
-            Model: GroqModel,
-            Messages: [
+        var chatResponse = await groqClient.SendChatRequestAsync(
+            GroqModel,
+            [
                 new GroqMessage("system", SystemPrompt),
                 new GroqMessage("user", GetUserPrompt(methodSignature, prompt))
-            ]
-        ), cancellationToken);
+            ],
+            cancellationToken
+        ) ?? throw new MethodGenerationException(methodSignature, "Groq API request failed");
 
-        if (chatResponse is null) return null;
+        var firstChoice = chatResponse.Messages.FirstOrDefault()
+                            ?? throw new MethodGenerationException(methodSignature, "Groq provided no responses");
 
-        GroqChatResponse.Choice firstChoice = chatResponse.Messages.First();
-        GroqJsonResponse? llmResponse = JsonConvert.DeserializeObject<GroqJsonResponse>(firstChoice.Message.Content);
-
-        if (llmResponse is null) return null;
+        var llmResponse = JsonConvert.DeserializeObject<GroqJsonResponse>(firstChoice.Message.Content)
+                            ?? throw new MethodGenerationException(methodSignature, "LLM provided invalid JSON");
 
         return new(llmResponse.Usings, llmResponse.Documentation, llmResponse.Body);
     }

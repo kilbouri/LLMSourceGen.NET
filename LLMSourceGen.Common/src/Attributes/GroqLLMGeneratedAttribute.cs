@@ -1,4 +1,4 @@
-namespace LLMSourceGen.Common;
+namespace LLMSourceGen.Common.Attributes;
 
 /// <summary>
 /// Indicates that the targeted method should be generated using

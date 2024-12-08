@@ -1,4 +1,4 @@
-namespace LLMSourceGen.Configuration;
+namespace LLMSourceGen.Analyzer.Configuration;
 
 internal static class ConfigurationHelper
 {
