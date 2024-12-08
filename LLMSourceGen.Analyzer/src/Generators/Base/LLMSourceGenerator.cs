@@ -6,7 +6,7 @@ using LLMSourceGen.Common;
 
 namespace LLMSourceGen.Generators.Base;
 
-public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGenerator where TAttribute : LLMAttribute
+public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGenerator where TAttribute : LLMGeneratedAttribute
 {
     internal sealed record LLMDeclaringType(string Keyword, string Namespace, string Name)
     {
@@ -123,7 +123,7 @@ public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGener
 
     private static string? GetUserPrompt(AttributeData attribute) => attribute
         .NamedArguments
-        .Where(pair => pair.Key == nameof(LLMAttribute.Prompt))
+        .Where(pair => pair.Key == nameof(LLMGeneratedAttribute.Prompt))
         .Select(pair => pair.Value.Value as string)
         .FirstOrDefault();
 }

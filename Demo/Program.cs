@@ -13,12 +13,12 @@ partial class Program
         p.SayGoodbye();
     }
 
-    [ChatGPT(Prompt = "Say 'Hello!'")]
+    [GroqLLMGenerated(Prompt = "Say 'Hello!'")]
     private partial void SayHello();
 
-    [ChatGPT(Prompt = "Print FizzBuzz from 1 to 15")]
+    [GroqLLMGenerated(Prompt = "Print FizzBuzz from 1 to 15")]
     private partial void FizzBuzz();
 
-    [ChatGPT(Prompt = "Say 'Goodbye!'")]
+    [GroqLLMGenerated(Prompt = "Say 'Goodbye!'")]
     private partial void SayGoodbye();
 }

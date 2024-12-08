@@ -5,7 +5,7 @@ using LLMSourceGen.Common;
 
 namespace LLMSourceGen.Generators.Base;
 
-public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGenerator where TAttribute : LLMAttribute
+public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGenerator where TAttribute : LLMGeneratedAttribute
 {
     protected sealed record LLMGeneratedData(string[] Usings, string[] Documentation, string[] Body);
 
@@ -19,7 +19,7 @@ public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGener
     /// <param name="methodSignature">The signature of the method being LLM-generated</param>
     /// <param name="prompt">The user-supplied prompt</param>
     /// <returns>The parsed LLM response</returns>
-    protected abstract Task<LLMGeneratedData> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken);
+    protected abstract Task<LLMGeneratedData?> PromptLLMAsync(string methodSignature, string prompt, CancellationToken cancellationToken);
 
     private async Task EmitGeneratedCodeAsync(IndentedTextWriter writer, ImmutableArray<LLMMethod?> methods, CancellationToken cancellationToken = default)
     {
@@ -34,7 +34,8 @@ public abstract partial class LLMSourceGenerator<TAttribute> : IIncrementalGener
         {
             if (method is null) continue;
 
-            LLMGeneratedData llmResponse = await PromptLLMAsync(method.ToDisplayString() + ";", method.UserPrompt, cancellationToken);
+            LLMGeneratedData? llmResponse = await PromptLLMAsync(method.ToDisplayString() + ";", method.UserPrompt, cancellationToken);
+            if (llmResponse is null) continue;
 
             LLMDeclaringType? parent = method.DeclaringType;
 

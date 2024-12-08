@@ -4,18 +4,25 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
         <ImplicitUsings>true</ImplicitUsings>
         <IsRoslynComponent>true</IsRoslynComponent>
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Roslyn dependencies -->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" />
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Class library reference -->
         <ProjectReference Include="..\LLMSourceGen.Common\LLMSourceGen.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Generator dependencies -->
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
