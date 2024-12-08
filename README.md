@@ -14,7 +14,7 @@ get an LLM to generate the answer for you without having to ever open a browser?
 Using LLMs to generate source code has many advantages, including:
 
 - code is written by cutting-edge LLM technology
-- writes documentation for generated code
+- all generated code is documented in clear natural language
 - generated source code does not require maintenance
 - lower costs, as developers can write new features faster
 
@@ -28,12 +28,37 @@ does have some minor limitations:
 - does not ensure safe type name resolution
 - may hallucinate buggy or completely incoherent source code
 
+## Demonstration
+
+Demonstration images can be found in the [docs](/docs) folder.
+
 ## Setup
+
+### Add the Roslyn Tooling
+
+Add the following to your .csproj:
+
+```xml
+<ItemGroup>
+    <!-- Provides attributes needed to opt into source generation -->
+    <ProjectReference Include="Path\To\LLMSourceGen.Common\LLMSourceGen.Common.csproj" />
+
+    <!-- Provides the Analyzer dependency -->
+    <ProjectReference Include="Path\To\LLMSourceGen.Analyzer\LLMSourceGen.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+</ItemGroup>
+
+<ItemGroup>
+    <!-- Enable the source generating analyzer -->
+    <Analyzer Include="Path\To\LLMSourceGen.Common\bin\Debug\netstandard2.0\LLMSourceGen.Common.dll"></Analyzer>
+</ItemGroup>
+```
 
 ### Groq Backend
 
 To use the free Groq backend, you must generate an API key. You can do that [on Groq's website](https://console.groq.com/keys).
-You should store your API key as an environment variable named `LLMSourceGen__GroqKey`.
+You should store your API key as an environment variable named `LLMSourceGen__GroqKey`. 
+
+You can also choose a model to use using the `LLMSourceGen__GroqModel`. If unset, the default is `llama3-8b-8192`.
 
 ## How It Works
 
